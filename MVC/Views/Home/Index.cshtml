@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Employee";
+}
+@section scripts
+{
+    <script src="~/Scripts/plugin/mustache.min.js"></script>
+    <script src="~/Scripts/controller/homeController.js"></script>
+}
+<hr/>
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" class="form-control txtSearch" id="keyword" placeholder="Search by name"/>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-primary">Search</button>
+            <button class="btn btn-success">Add</button>
+        </div>
+    </div>
+<hr/>
+<div class="row">
+    <table class="table">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Salary</td>
+            <td>Status</td>
+        </tr>
+        </thead>
+        <tbody id="tblData"></tbody>
+    </table>
+</div>
+
+<script id="data-template" type="x-tmpl-mustache">
+    <tr>
+        <td>{{ID}}</td>
+        <td>{{Name}}</td>
+        <td><input class="form-control salary" type="number" value="{{Salary}}" data-id="{{ID}}" /></td>
+        <td>{{{Status}}}</td>
+    </tr>
+</script>
