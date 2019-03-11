@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using System.Web.Services.Description;
 using Data;
 using MODEL;
 
@@ -24,12 +25,12 @@ namespace MVC.Controllers
         public JsonResult GetListEmployees()
         {
             var model = from e in _context.Employees
-                select e;
+                        select e;
             return Json(new
             {
                 data = model,
                 status = true,
-            },JsonRequestBehavior.AllowGet);
+            }, JsonRequestBehavior.AllowGet);
         }
 
         //Update: Employee
@@ -37,6 +38,7 @@ namespace MVC.Controllers
         public JsonResult UpdateEmployee(string model)
         {
             var statusResult = "";
+            var message = "";
             //Chuyển đổi dữ liệu từ string Json
             //Sau đó map sang kiểu dữ liệu của mình
             JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -54,14 +56,78 @@ namespace MVC.Controllers
                 _context.SaveChanges();
                 statusResult = "OK";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 statusResult = "Err";
+                message = ex.Message;
             }
             return Json(new
             {
                 status = statusResult,
+                err = message,
             });
+        }
+
+        //Create new Employee
+        [HttpPost]
+        public JsonResult CreateEmployee(string employee)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Employee inputData = serializer.Deserialize<Employee>(employee);
+            bool status = true;
+            string message = string.Empty;
+            try
+            {
+                if (inputData.Id.Equals(0))
+                {
+                    _context.Employees.Add(inputData);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    var entity = _context.Employees.Find(inputData.Id);
+                    entity.Name = inputData.Name;
+                    entity.Salary = inputData.Salary;
+                    entity.Status = inputData.Status;
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                status = false;
+                message = e.Message;
+
+            }
+            
+            return Json(new
+            {
+                status = status,
+                message = message
+            });
+        }
+
+        //Get Employee By Id
+        [HttpPost]
+        public JsonResult GetEmplyeeById(int id)
+        {
+            var model = _context.Employees.Find(id);
+            return Json(new
+            {
+                data = model,
+                status = "OK"
+            });
+        }
+
+        //Search Employee
+        [HttpGet]
+        public JsonResult SearchEmployee(string keyword)
+        {
+            var model = _context.Employees.Where(x => x.Name.Contains(keyword.Trim()));
+            return Json(new
+            {
+                data = model,
+                status = "OK"
+            },JsonRequestBehavior.AllowGet);
         }
     }
 }

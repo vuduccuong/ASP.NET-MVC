@@ -6,36 +6,79 @@
     <script src="~/Scripts/plugin/mustache.min.js"></script>
     <script src="~/Scripts/controller/homeController.js"></script>
 }
-<hr/>
-    <div class="row">
-        <div class="col-md-4">
-            <input type="text" class="form-control txtSearch" id="keyword" placeholder="Search by name"/>
-        </div>
-        <div class="col-md-4">
-            <button class="btn btn-primary">Search</button>
-            <button class="btn btn-success">Add</button>
-        </div>
+<style type="text/css">.mb-3 { }
+
+ .form-check-input { }
+
+ .btn-secondary { }
+</style>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <input type="text" class="form-control txtSearch" id="keyword" placeholder="Search by name" />
     </div>
-<hr/>
+    <div class="col-md-4">
+        <button class="btn btn-primary" id="btnSearch">Search</button>
+        <button class="btn btn-success" data-toggle="modal" data-target="#addEmployee">Add</button>
+    </div>
+</div>
+<hr />
 <div class="row">
     <table class="table">
         <thead>
-        <tr>
-            <td>ID</td>
-            <td>Name</td>
-            <td>Salary</td>
-            <td>Status</td>
-        </tr>
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Salary</td>
+                <td>Status</td>
+                <td>Action</td>
+            </tr>
         </thead>
         <tbody id="tblData"></tbody>
     </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addEmployee" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" class="form-control" id="ID" value="0">
+                    <div class="col-md-6 mb-3">
+                        <label>First name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Name" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Salary</label>
+                        <input type="number" class="form-control" id="salary" placeholder="Salary" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <input type="checkbox" class="form-check-input" id="status">
+                        <label>Active</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSave">Save changes</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script id="data-template" type="x-tmpl-mustache">
     <tr>
         <td>{{ID}}</td>
         <td>{{Name}}</td>
-        <td><input class="form-control salary" type="number" value="{{Salary}}" data-id="{{ID}}" /></td>
+        <td>{{Salary}}</td>
         <td>{{{Status}}}</td>
+        <td><button class="btn btn-warning btnUpdate"  value="{{ID}}"><i class="glyphicon glyphicon-edit"></i>Edit</button></td>
     </tr>
 </script>
