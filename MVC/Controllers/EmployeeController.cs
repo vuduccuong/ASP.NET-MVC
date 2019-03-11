@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using Data;
+using MODEL;
+using System;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using System.Web.Services.Description;
-using Data;
-using MODEL;
 
 namespace MVC.Controllers
 {
     public class EmployeeController : Controller
     {
-        private DataDbContext _context;
+        private readonly DataDbContext _context;
 
         public EmployeeController()
         {
@@ -37,8 +33,8 @@ namespace MVC.Controllers
         [HttpPost]
         public JsonResult UpdateEmployee(string model)
         {
-            var statusResult = "";
-            var message = "";
+            string statusResult;
+            string message = string.Empty;
             //Chuyển đổi dữ liệu từ string Json
             //Sau đó map sang kiểu dữ liệu của mình
             JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -64,7 +60,7 @@ namespace MVC.Controllers
             return Json(new
             {
                 status = statusResult,
-                err = message,
+                err = message
             });
         }
 
@@ -86,9 +82,13 @@ namespace MVC.Controllers
                 else
                 {
                     var entity = _context.Employees.Find(inputData.Id);
-                    entity.Name = inputData.Name;
-                    entity.Salary = inputData.Salary;
-                    entity.Status = inputData.Status;
+                    if (entity != null)
+                    {
+                        entity.Name = inputData.Name;
+                        entity.Salary = inputData.Salary;
+                        entity.Status = inputData.Status;
+                    }
+
                     _context.SaveChanges();
                 }
             }
@@ -96,19 +96,18 @@ namespace MVC.Controllers
             {
                 status = false;
                 message = e.Message;
-
             }
-            
+
             return Json(new
             {
-                status = status,
-                message = message
+                status,
+                message
             });
         }
 
         //Get Employee By Id
         [HttpPost]
-        public JsonResult GetEmplyeeById(int id)
+        public JsonResult GetEmployeeById(int id)
         {
             var model = _context.Employees.Find(id);
             return Json(new
@@ -127,7 +126,7 @@ namespace MVC.Controllers
             {
                 data = model,
                 status = "OK"
-            },JsonRequestBehavior.AllowGet);
+            }, JsonRequestBehavior.AllowGet);
         }
     }
 }

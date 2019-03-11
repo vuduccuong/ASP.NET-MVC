@@ -89,7 +89,7 @@
     //Get Employee By Id
     getEmployeeById: function(id) {
         $.ajax({
-            url: '/Employee/GetEmplyeeById/',
+            url: '/Employee/GetEmployeeById/',
             type: 'POST',
             dataType: 'JSON',
             data: { id: id },
